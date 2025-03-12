@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "../components/navbar";
 import VideoUpload from "../components/videoUpload";
+import VideoPlayer from "../components/videoPlayer";
 
 const Home = () => {
     return (

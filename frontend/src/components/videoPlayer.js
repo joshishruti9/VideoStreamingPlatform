@@ -1,27 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
 
-function WatchVideo({ video }) {
-    if (!video) return <div className="p-4">No video selected</div>;
+const VideoPlayer = () => {
+    const [videos, setVideos] = useState([]);
+
+    useEffect(() => {
+        // Fetch available videos from backend
+        fetch("http://localhost:5000/api/videos") // Ensure correct API endpoint
+            .then((response) => response.json())
+            .then((data) => setVideos(data)) // Expecting array of objects [{ id: 1 }, { id: 2 }]
+            .catch((error) => console.error("Error fetching videos:", error));
+    }, []);
 
     return (
-        <div className="p-4 max-w-4xl mx-auto">
-            <video className="w-full rounded-lg shadow-md" controls>
-                <source src={video.url} type="video/mp4" />
-                Your browser does not support the video tag.
-            </video>
-            <h2 className="text-xl font-bold mt-4">{video.title}</h2>
-            <p className="text-gray-600">{video.description}</p>
-            <div className="mt-4">Likes: {video.likes}</div>
-            <div className="mt-4">
-                <h3 className="text-lg font-semibold">Comments:</h3>
-                <ul className="list-disc ml-4">
-                    {video.comments.map((comment, index) => (
-                        <li key={index}>{comment}</li>
-                    ))}
-                </ul>
-            </div>
+        <div>
+            <h2>Available Videos</h2>
+            {videos.length === 0 ? (
+                <p>No videos found.</p>
+            ) : (
+                videos.map((video) => (
+                    <div key={video.id}>
+                        <h4>Video ID: {video.id}</h4> 
+                        <video width="600" controls>
+                            <source src={`http://localhost:5000/api/videos/stream/${video.id}`} type="video/mp4" />
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                ))
+            )}
         </div>
     );
-}
+};
 
-export default WatchVideo;
+export default VideoPlayer;

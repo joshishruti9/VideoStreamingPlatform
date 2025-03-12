@@ -9,6 +9,8 @@ router.get('/upload', (req, res) => {
 });
 
 // Video upload API endpoint (Controller)
-router.post('/upload', videoController.uploadVideo);
+router.post("/upload", videoController.uploadVideo);
+router.get("/", videoController.getAllVideos);
+router.get("/stream/:id", videoController.streamVideo);
 
 module.exports = router;
