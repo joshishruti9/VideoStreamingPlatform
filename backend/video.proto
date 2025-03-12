@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package video;
+
+service VideoService {
+  rpc StreamVideo (VideoRequest) returns (VideoResponse);
+}
+
+message VideoRequest {
+  string id = 1;
+}
+
+message VideoResponse {
+  bytes data = 1;
+}
