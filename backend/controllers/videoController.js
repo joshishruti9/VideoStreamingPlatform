@@ -51,7 +51,7 @@ const getVideoById = (videoId, callback) => {
 
 // Get all video IDs from MySQL
 const getAllVideoDetails = (req, res) => {
-    videoModel.getAllVideos((err, videos) => {
+    videoModel.getAllVideoDetails((err, videos) => {
         if (err) {
             console.error("Error fetching videos:", err);
             return res.status(500).json({ error: "Database error" });
