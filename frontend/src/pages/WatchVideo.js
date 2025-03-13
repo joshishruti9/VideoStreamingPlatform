@@ -3,36 +3,49 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 
 const WatchVideo = () => {
-    const { id } = useParams(); // Get video ID from URL
+    //  Get video ID from URL
+    const { id } = useParams(); 
+
     const [video, setVideo] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/videos/${id}`) // Fetch video details
+        // Fetch video details (title, description, upload date)
+        axios.get(`http://localhost:5000/videos/${id}`)
             .then((response) => {
-                setVideo(response.data);
+                console.log("Video Details Response:", response.data); // Debugging output
+
+                 // Extract video_details object
+                if (response.data.video_details) {
+                    setVideo(response.data.video_details);
+                } else {
+                    setError("Video not found");
+                }
+                setLoading(false);
             })
             .catch((error) => {
                 console.error("Error fetching video details:", error);
+                setError("Error loading video details.");
+                setLoading(false);
             });
     }, [id]);
 
-    if (!video) {
-        return <h2>Loading video...</h2>;
-    }
+    if (loading) return <h2>Loading video...</h2>;
+    if (error) return <h2>{error}</h2>;
 
     return (
         <div style={styles.container}>
             <div style={styles.videoSection}>
+                <h2 style={styles.title}>{video.title}</h2>
+                <p style={styles.description}>{video.description}</p>
+                <p style={styles.date}>Uploaded on: {new Date(video.created_at).toLocaleDateString()}</p>
+                
+
                 <video controls width="800" style={styles.videoPlayer}>
-                    <source src={`http://localhost:5000/videos/stream/${id}`} type="video/mp4" /> {/* ✅ Use backend route */}
+                    <source src={`http://localhost:5000/videos/stream/${id}`} type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
-                <h2 style={styles.title}>{video.title}</h2>
-                <p style={styles.date}>Uploaded on: {new Date(video.uploadDate).toLocaleDateString()}</p>
-                <p style={styles.description}>{video.description}</p>
-                <a href={`http://localhost:5000/videos/download/${id}`} download style={styles.downloadButton}>
-                    Download Video
-                </a>
             </div>
         </div>
     );
@@ -59,25 +72,16 @@ const styles = {
     title: {
         fontSize: "22px",
         fontWeight: "bold",
-        marginTop: "10px",
-    },
-    date: {
-        fontSize: "14px",
-        color: "#666",
+        marginBottom: "10px",
     },
     description: {
         fontSize: "16px",
-        marginTop: "10px",
+        color: "#555",
+        marginBottom: "10px",
     },
-    downloadButton: {
-        display: "inline-block",
-        marginTop: "15px",
-        padding: "10px 15px",
-        backgroundColor: "#ff0000",
-        color: "#fff",
-        textDecoration: "none",
-        borderRadius: "5px",
-        fontWeight: "bold",
+    date: {
+        fontSize: "14px",
+        color: "#777",
     },
 };
 
