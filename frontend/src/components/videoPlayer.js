@@ -4,10 +4,16 @@ const VideoPlayer = () => {
     const [videos, setVideos] = useState([]);
 
     useEffect(() => {
-        // Fetch available videos from backend
-        fetch("http://localhost:5000/api/videos") // Ensure correct API endpoint
+        fetch("http://localhost:5000/videos") // Fetch video IDs
             .then((response) => response.json())
-            .then((data) => setVideos(data)) // Expecting array of objects [{ id: 1 }, { id: 2 }]
+            .then((data) => {
+                console.log("Fetched videos:", data); // Debugging output
+                if (Array.isArray(data) && data.length > 0) {
+                    setVideos(data);
+                } else {
+                    setVideos([]); // Handle empty or invalid response
+                }
+            })
             .catch((error) => console.error("Error fetching videos:", error));
     }, []);
 
@@ -17,15 +23,19 @@ const VideoPlayer = () => {
             {videos.length === 0 ? (
                 <p>No videos found.</p>
             ) : (
-                videos.map((video) => (
-                    <div key={video.id}>
-                        <h4>Video ID: {video.id}</h4> 
-                        <video width="600" controls>
-                            <source src={`http://localhost:5000/api/videos/stream/${video.id}`} type="video/mp4" />
-                            Your browser does not support the video tag.
-                        </video>
-                    </div>
-                ))
+                <ul>
+                    {videos.map((video) => (
+                        <li key={video.id}>
+                            <a 
+                                href={`http://localhost:5000/videos/stream/${video.id}`} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                            >
+                                Watch Video {video.id}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
             )}
         </div>
     );

@@ -8,24 +8,26 @@ const upload = multer({ storage: storage }).single('video'); // Use 'video' as t
 
 // Controller function to upload video
 const uploadVideo = (req, res) => {
-    console.log(req.file)
     upload(req, res, (err) => {
         if (err) {
-            return res.status(400).json({ message: 'Error uploading video', error: err.message });
+            return res.status(400).json({ message: "Error uploading video", error: err.message });
         }
 
-        // Extract the video data from the request (from memory storage)
-        const videoData = req.file.buffer; // Multer stores the video in memory as a buffer
+        if (!req.file) {  // Check if the file exists
+            return res.status(400).json({ message: "No video file uploaded" });
+        }
 
-        // Pass the video data to the model for storage in the database
+        // Extract video from memory storage
+        const videoData = req.file.buffer;
+
+        // Call Model to Store Video in Database
         videoModel.uploadVideo(videoData, (err, videoId) => {
             if (err) {
-                console.error('Error storing video in database:', err);
-                return res.status(500).json({ message: 'Error storing video in database', error: err });
+                console.error("Error storing video in database:", err);
+                return res.status(500).json({ message: "Error storing video in database", error: err });
             }
 
-            // Respond with the ID of the uploaded video
-            res.status(200).json({ message: 'Video uploaded successfully', videoId: videoId });
+            res.status(200).json({ message: "Video uploaded successfully", videoId: videoId });
         });
     });
 };
