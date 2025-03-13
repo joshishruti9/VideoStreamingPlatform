@@ -2,10 +2,10 @@
 const db = require('../config/database');  // Import the db configuration
 
 // Function to upload video data into the database
-const uploadVideo = (videoData, callback) => {
+const uploadVideo = (videoData, title, description, callback) => {
     console.log("Hello")
-    const query = 'INSERT INTO videos_data (video_data) VALUES (?)';
-    const values = [videoData];
+    const query = 'INSERT INTO videos_data (video_data, title, description) VALUES (?, ?, ?)';
+    const values = [videoData, title, description];
 
     db.execute(query, values, (err, result) => {
         if (err) {

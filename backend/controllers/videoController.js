@@ -13,24 +13,31 @@ const uploadVideo = (req, res) => {
             return res.status(400).json({ message: "Error uploading video", error: err.message });
         }
 
-        if (!req.file) {  // Check if the file exists
+        const { title, description } = req.body; // Extract title and description
+
+        if (!req.file) {
             return res.status(400).json({ message: "No video file uploaded" });
+        }
+
+        if (!title || !description) {
+            return res.status(400).json({ message: "Title and description are required" });
         }
 
         // Extract video from memory storage
         const videoData = req.file.buffer;
 
         // Call Model to Store Video in Database
-        videoModel.uploadVideo(videoData, (err, videoId) => {
+        videoModel.uploadVideo(videoData, title, description, (err, videoId) => {
             if (err) {
                 console.error("Error storing video in database:", err);
                 return res.status(500).json({ message: "Error storing video in database", error: err });
             }
 
-            res.status(200).json({ message: "Video uploaded successfully"});
+            res.status(200).json({ message: "Video uploaded successfully" });
         });
     });
 };
+
 
 // Function to fetch video data from MySQL
 const getVideoById = (videoId, callback) => {
