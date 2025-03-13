@@ -25,6 +25,24 @@ const getVideoById = (videoId, callback) => {
     });
 };
 
+// Function to fetch a specific video's details from MySQL
+const getVideoDetailsById = (videoId, callback) => {
+    const query = 'SELECT id, title, description, created_at FROM videos_data WHERE id = ?';
+    db.execute(query, [videoId], (err, results) => {
+        if (err) return callback(err, null);
+        
+        // Return data in REST API format
+        const video = results.map(video => ({
+            id: video.id,
+            title: video.title,
+            description: video.description,
+            created_at: video.created_at
+        }));
+
+        callback(null, video);
+    });
+};
+
 // Function to fetch all video details
 const getAllVideoDetails = (callback) => {
     const query = 'SELECT id, title, description, created_at FROM videos_data';
@@ -32,16 +50,16 @@ const getAllVideoDetails = (callback) => {
         if (err) return callback(err, null);
         
         // Return data in REST API format
-        const formattedResults = results.map(video => ({
+        const video_details = results.map(video => ({
             id: video.id,
             title: video.title,
             description: video.description,
             created_at: video.created_at
         }));
 
-        callback(null, formattedResults);
+        callback(null, video_details);
     });
 };
 
 
-module.exports = { uploadVideo, getVideoById, getAllVideoDetails };
+module.exports = { uploadVideo, getVideoById, getVideoDetailsById, getVideoDetailsById, getAllVideoDetails };

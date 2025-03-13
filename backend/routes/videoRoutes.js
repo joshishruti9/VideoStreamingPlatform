@@ -12,8 +12,11 @@ router.get('/upload', (req, res) => {
 // Video upload API endpoint (Controller)
 router.post("/upload", videoController.uploadVideo);
 
-// Get Video details API endpoint
+// Get all video details API endpoint
 router.get("/", videoController.getAllVideoDetails);
+
+// Get specific video tail API endpoint
+router.get("/:id", videoController.getVideoDetailsById);
 
 // Video streaming API endpoint
 router.get("/stream/:id", videoController.streamVideo);

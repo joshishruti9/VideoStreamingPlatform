@@ -39,14 +39,28 @@ const uploadVideo = (req, res) => {
 };
 
 
-// Function to fetch video data from MySQL
-const getVideoById = (videoId, callback) => {
-    const sql = "SELECT video_data FROM videos_data WHERE id = ?";
-    db.query(sql, [videoId], (err, result) => {
-        if (err) return callback(err, null);
-        if (result.length === 0) return callback(null, null); // No video found
-        callback(null, result[0].video_data);
+// Function to fetch specific video details data from MySQL
+const getVideoDetailsById = (req, res) => {
+    // Get video ID from request
+    const videoId = req.params.id;
+
+    // Use getVideoDetailsById function to get details
+    videoModel.getVideoDetailsById(videoId, (err, video) => {
+        if (err) {
+            console.error("Error fetching video:", err);
+            return res.status(500).json({ error: "Database error" });
+        }
+        if (!video) {
+            return res.status(404).json({ error: "Video not found" });
+        }
+
+        // Ensure JSON response includes full details
+        res.status(200).json({
+            message: "Videos retrieved successfully",
+            video_details: video[0]
+        });
     });
+
 };
 
 // Get all video IDs from MySQL
@@ -65,6 +79,7 @@ const getAllVideoDetails = (req, res) => {
 };
 
 const downloadVideo = (req, res) => {
+    // Get video ID from request
     const videoId = req.params.id;
 
     // Query to fetch video data from MySQL
@@ -92,8 +107,10 @@ const downloadVideo = (req, res) => {
 };
 
 const streamVideo = (req, res) => {
+    // Get video ID from request
     const videoId = req.params.id;
 
+    // Use getVideoByID function to obtain video data
     videoModel.getVideoById(videoId, (err, videoData) => {
         if (err) {
             console.error("Database error:", err);
@@ -113,4 +130,4 @@ const streamVideo = (req, res) => {
     });
 };
 
-module.exports = { uploadVideo, getVideoById, getAllVideoDetails, streamVideo, downloadVideo};
+module.exports = { uploadVideo, getVideoDetailsById, getAllVideoDetails, streamVideo, downloadVideo};
