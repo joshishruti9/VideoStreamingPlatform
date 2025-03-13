@@ -23,3 +23,5 @@ yarn-debug.log*
 yarn-error.log*
 /frontend/node_modules/.cache
 /frontend/node_modules/.cache/babel-loader
+/frontend/node_modules/.cache/default-development
+/frontend/node_modules/.cache
