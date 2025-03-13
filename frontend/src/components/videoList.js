@@ -1,41 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
-const VideoList = () => {
-    const [videos, setVideos] = useState([]);
-
-    useEffect(() => {
-        fetch("http://localhost:5000/videos") // Fetch all video details
-            .then((response) => response.json())
-            .then((data) => {
-                console.log("Fetched videos:", data); // ✅ Debugging output
-                
-                if (data.videos && Array.isArray(data.videos) && data.videos.length > 0) {
-                    setVideos(data.videos); //  Extract videos from API response
-                } else {
-                    setVideos([]); // Handle empty or invalid response
-                }
-            })
-            .catch((error) => console.error("Error fetching videos:", error));
-    }, []);
-
+const VideoList = ({ videos }) => {
     return (
         <div style={styles.container}>
             <h2 style={styles.heading}>Available Videos</h2>
+            
             {videos.length === 0 ? (
                 <p>No videos found.</p>
             ) : (
                 <ul style={styles.videoList}>
                     {videos.map((video) => (
                         <li key={video.id} style={styles.videoItem}>
+                            {/*  Redirect to Watch Video Page*/}
                             <Link 
-                                to={`/watch/${video.id}`} // ✅ Redirect to Watch Video Page
+                                to={`/watch/${video.id}`}
                                 style={styles.videoLink}
                             >
-                                <h3>{video.title}</h3> {/* ✅ Display Title */}
+
+                            {/*  Display Title */}
+                            <h3>{video.title}</h3>
+
+                            {/* Display Description */}
                             </Link>
-                            <p style={styles.description}>{video.description}</p> {/* ✅ Display Description */}
-                            <p style={styles.date}>Uploaded on: {new Date(video.created_at).toLocaleDateString()}</p> {/* ✅ Display Upload Date */}
+                            <p style={styles.description}>{video.description}</p>
+
+                             {/* Display Upload Date */}
+                            <p style={styles.date}>Uploaded on: {new Date(video.created_at).toLocaleDateString()}</p>
                         </li>
                     ))}
                 </ul>
@@ -44,6 +35,7 @@ const VideoList = () => {
     );
 };
 
+//  Inline CSS styles
 const styles = {
     container: {
         maxWidth: "800px",
