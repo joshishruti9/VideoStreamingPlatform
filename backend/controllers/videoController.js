@@ -50,13 +50,44 @@ const getVideoById = (videoId, callback) => {
 };
 
 // Get all video IDs from MySQL
-const getAllVideos = (req, res) => {
+const getAllVideoDetails = (req, res) => {
     videoModel.getAllVideos((err, videos) => {
         if (err) {
             console.error("Error fetching videos:", err);
             return res.status(500).json({ error: "Database error" });
         }
-        res.json(videos);
+        // Ensure JSON response includes full details
+        res.status(200).json({
+            message: "Videos retrieved successfully",
+            videos: videos
+        });
+    });
+};
+
+const downloadVideo = (req, res) => {
+    const videoId = req.params.id;
+
+    // Query to fetch video data from MySQL
+    const query = "SELECT video_data, title FROM videos_data WHERE id = ?";
+
+    db.query(query, [videoId], (err, results) => {
+        if (err) {
+            console.error("Database error:", err);
+            return res.status(500).json({ error: "Database error" });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ error: "Video not found" });
+        }
+
+        const videoData = results[0].video_data;
+        const videoTitle = results[0].title || "video"; // Default name if no title
+
+        // Set headers to force download
+        res.setHeader("Content-Disposition", `attachment; filename="${videoTitle}.mp4"`);
+        res.setHeader("Content-Type", "video/mp4");
+
+        res.end(videoData); //  Send the video file as a response
     });
 };
 
@@ -82,4 +113,4 @@ const streamVideo = (req, res) => {
     });
 };
 
-module.exports = { uploadVideo, getVideoById, getAllVideos, streamVideo};
+module.exports = { uploadVideo, getVideoById, getAllVideoDetails, streamVideo, downloadVideo};

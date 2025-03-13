@@ -25,13 +25,23 @@ const getVideoById = (videoId, callback) => {
     });
 };
 
-// Function to fetch all video IDs
-const getAllVideos = (callback) => {
-    const query = 'SELECT id FROM videos_data';
+// Function to fetch all video details
+const getAllVideoDetails = (callback) => {
+    const query = 'SELECT id, title, description, created_at FROM videos_data';
     db.execute(query, (err, results) => {
         if (err) return callback(err, null);
-        callback(null, results); // Returns all video IDs
+        
+        // Return data in REST API format
+        const formattedResults = results.map(video => ({
+            id: video.id,
+            title: video.title,
+            description: video.description,
+            created_at: video.created_at
+        }));
+
+        callback(null, formattedResults);
     });
 };
 
-module.exports = { uploadVideo, getVideoById, getAllVideos };
+
+module.exports = { uploadVideo, getVideoById, getAllVideoDetails };
