@@ -6,9 +6,8 @@ import VideoPlayer from "../components/videoPlayer";
 const Home = () => {
     return (
         <div>
-            <Navbar />
-            <VideoUpload />
             <h1 className="p-4">Welcome to YouTube Clone</h1>
+            <VideoUpload />
             <VideoPlayer /> {/* Show videos on homepage */}
         </div>
     );

@@ -27,7 +27,7 @@ const uploadVideo = (req, res) => {
                 return res.status(500).json({ message: "Error storing video in database", error: err });
             }
 
-            res.status(200).json({ message: "Video uploaded successfully", videoId: videoId });
+            res.status(200).json({ message: "Video uploaded successfully"});
         });
     });
 };
