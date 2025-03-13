@@ -1,10 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Navbar = () => {
+    const [user, setUser] = useState(null);
+
+    // Fetch logged-in user
+    useEffect(() => {
+        axios.get("http://localhost:5000/auth/user", { withCredentials: true })
+            .then((response) => {
+                // Set user data
+                if (response.data.user) {
+                    setUser(response.data.user); 
+                }
+            })
+            .catch((error) => console.error("Error fetching user:", error));
+    }, []);
+
     return (
         <nav style={styles.navbar}>
-            {/*Left-Aligned Navigation Links */}
+            {/* Left-Aligned Navigation Links */}
             <div style={styles.leftSection}>
                 <h2 style={styles.logo}>YouTube Clone</h2>
                 <ul style={styles.navLinks}>
@@ -13,10 +28,21 @@ const Navbar = () => {
                 </ul>
             </div>
 
-            {/* Right-Aligned Google Login Button */}
-            <a href="http://localhost:5000/auth/google" style={styles.loginButton}>
-                Login with Google
-            </a>
+            {/* Right Section: Show "Welcome, Name" or Login Button */}
+            <div style={styles.rightSection}>
+                {user ? (
+                    <>
+                        <span style={styles.welcome}>Welcome, {user.name}!</span>
+                        <a href="http://localhost:5000/auth/logout" style={styles.logoutButton}>
+                            Logout
+                        </a>
+                    </>
+                ) : (
+                    <a href="http://localhost:5000/auth/google" style={styles.loginButton}>
+                        Login with Google
+                    </a>
+                )}
+            </div>
         </nav>
     );
 };
@@ -34,12 +60,12 @@ const styles = {
     leftSection: {
         display: "flex",
         alignItems: "center",
-        gap: "20px", // Space between logo and links
+        gap: "20px",
     },
     logo: {
         margin: 0,
         color: "#222",
-        fontweight: "bold",
+        fontWeight: "bold",
     },
     navLinks: {
         listStyle: "none",
@@ -54,6 +80,16 @@ const styles = {
         fontSize: "18px",
         fontWeight: "bold",
     },
+    rightSection: {
+        display: "flex",
+        alignItems: "center",
+        gap: "10px",
+    },
+    welcome: {
+        fontSize: "16px",
+        fontWeight: "bold",
+        marginRight: "10px",
+    },
     loginButton: {
         backgroundColor: "#fff",
         color: "#007BFF",
@@ -62,6 +98,15 @@ const styles = {
         textDecoration: "none",
         fontWeight: "bold",
         border: "1px solid #007BFF",
+    },
+    logoutButton: {
+        backgroundColor: "#ff4d4d",
+        color: "#fff",
+        padding: "8px 16px",
+        borderRadius: "5px",
+        textDecoration: "none",
+        fontWeight: "bold",
+        border: "none",
     }
 };
 

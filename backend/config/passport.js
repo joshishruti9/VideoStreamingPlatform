@@ -1,21 +1,38 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const dotenv = require("dotenv");
-
-dotenv.config();
+const userModel = require("../models/userModel");
+require("dotenv").config();
 
 passport.use(
     new GoogleStrategy(
         {
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: "/auth/google/callback",
+            callbackURL: process.env.GOOGLE_CALLBACK_URL,
         },
         (accessToken, refreshToken, profile, done) => {
-            return done(null, profile);
+            userModel.findUserByGoogleId(profile.id, (err, existingUser) => {
+                if (err) return done(err);
+                                if (existingUser) {
+                    return done(null, existingUser);
+                } else {
+                    userModel.createUser(profile, (err, newUser) => {
+                        return done(err, newUser);
+                    });
+                }
+            });
         }
     )
 );
 
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((obj, done) => done(null, obj));
+// Serialize user (store in session)
+passport.serializeUser((user, done) => {
+    done(null, user.google_id);
+});
+
+// Deserialize user (retrieve user from DB)
+passport.deserializeUser((googleId, done) => {
+    userModel.findUserByGoogleId(googleId, (err, user) => {
+        done(err, user);
+    });
+});
