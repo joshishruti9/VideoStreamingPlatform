@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/navbar";
 
 const UploadPage = () => {
     const [title, setTitle] = useState("");
@@ -39,40 +40,43 @@ const UploadPage = () => {
     };
 
     return (
-        <div style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
-    
+        <div>
+            <Navbar />
+            <div style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
+        
 
-            <h2>Upload Video</h2>
-            
-            <input type="file" accept="video/mp4" onChange={handleFileChange} required />
+                <h2>Upload Video</h2>
+                
+                <input type="file" accept="video/mp4" onChange={handleFileChange} required />
 
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Title:</label>
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        required
-                        style={{ width: "100%", padding: "8px", margin: "5px 0" }}
-                    />
-                </div>
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <label>Title:</label>
+                        <input
+                            type="text"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            required
+                            style={{ width: "100%", padding: "8px", margin: "5px 0" }}
+                        />
+                    </div>
 
-                <div>
-                    <label>Description:</label>
-                    <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        required
-                        style={{ width: "100%", padding: "8px", margin: "5px 0", height: "100px" }}
-                    />
-                </div>
+                    <div>
+                        <label>Description:</label>
+                        <textarea
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            required
+                            style={{ width: "100%", padding: "8px", margin: "5px 0", height: "100px" }}
+                        />
+                    </div>
 
 
-                <button type="submit" style={{ marginTop: "10px", padding: "10px", width: "100%" }}>
-                    Upload Video
-                </button>
-            </form>
+                    <button type="submit" style={{ marginTop: "10px", padding: "10px", width: "100%" }}>
+                        Upload Video
+                    </button>
+                </form>
+            </div>
         </div>
     );
 };
