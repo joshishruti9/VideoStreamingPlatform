@@ -1,11 +1,9 @@
-// models/videoModel.js
 const db = require('../config/database');  // Import the db configuration
 
 // Function to upload video data into the database
-const uploadVideo = (videoData, title, description, callback) => {
-    console.log("Hello")
-    const query = 'INSERT INTO videos_data (video_data, title, description) VALUES (?, ?, ?)';
-    const values = [videoData, title, description];
+const uploadVideo = (videoData, title, description, userId, uploader, callback) => {
+    const query = 'INSERT INTO videos_data (video_data, title, description, user_id, uploader) VALUES (?, ?, ?, ?, ?)';
+    const values = [videoData, title, description, userId, uploader];
 
     db.execute(query, values, (err, result) => {
         if (err) {
@@ -27,7 +25,7 @@ const getVideoById = (videoId, callback) => {
 
 // Function to fetch a specific video's details from MySQL
 const getVideoDetailsById = (videoId, callback) => {
-    const query = 'SELECT id, title, description, created_at FROM videos_data WHERE id = ?';
+    const query = 'SELECT id, title, description, uploader, user_id, created_at FROM videos_data WHERE id = ?';
     db.execute(query, [videoId], (err, results) => {
         if (err) return callback(err, null);
         
@@ -35,6 +33,8 @@ const getVideoDetailsById = (videoId, callback) => {
         const video = results.map(video => ({
             id: video.id,
             title: video.title,
+            uploader: video.uploader,
+            user_id: video.user_id,
             description: video.description,
             created_at: video.created_at
         }));
@@ -45,7 +45,7 @@ const getVideoDetailsById = (videoId, callback) => {
 
 // Function to fetch all video details
 const getAllVideoDetails = (callback) => {
-    const query = 'SELECT id, title, description, created_at FROM videos_data';
+    const query = 'SELECT id, title, description, uploader, user_id, created_at FROM videos_data';
     db.execute(query, (err, results) => {
         if (err) return callback(err, null);
         
@@ -53,6 +53,8 @@ const getAllVideoDetails = (callback) => {
         const video_details = results.map(video => ({
             id: video.id,
             title: video.title,
+            uploader: video.uploader,
+            user_id: video.user_id,
             description: video.description,
             created_at: video.created_at
         }));

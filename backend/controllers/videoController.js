@@ -26,14 +26,18 @@ const uploadVideo = (req, res) => {
         // Extract video from memory storage
         const videoData = req.file.buffer;
 
+        // Get user information from the session
+        const userId = req.user.id;
+        const uploader = req.user.name;
+
         // Call Model to Store Video in Database
-        videoModel.uploadVideo(videoData, title, description, (err, videoId) => {
+        videoModel.uploadVideo(videoData, title, description, userId, uploader, (err, videoId) => {
             if (err) {
                 console.error("Error storing video in database:", err);
                 return res.status(500).json({ message: "Error storing video in database", error: err });
             }
 
-            res.status(200).json({ message: "Video uploaded successfully" });
+            res.status(200).json({ message: "Video uploaded successfully", videoId });
         });
     });
 };
