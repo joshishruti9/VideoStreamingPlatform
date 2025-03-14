@@ -29,6 +29,8 @@ const WatchPage = () => {
         <div style={{ textAlign: "center", marginTop: "20px" }}>
             <h2>{video.title}</h2>
             <p>{video.description}</p>
+            <p>Uploaded by: {video.uploader}</p>
+
             <p>Uploaded on: {new Date(video.created_at).toLocaleDateString()}</p>
 
             <VideoPlayer videoId={id} /> {/* Using the reusable VideoPlayer component */}
