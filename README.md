@@ -122,6 +122,6 @@ This project is a full-stack YouTube-like platform built using Node.js, Express,
 
 ### Video Routes
 - `POST /videos/upload` - Uploads a new video (authenticated users only)
-- `GET /videos/` - Retrieves all videos
+- `GET /videos/` - Retrieves all video details
 - `GET /videos/:id` - Retrieves specific video details
 - `GET /videos/stream/:id` - Streams video by ID
