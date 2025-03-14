@@ -1,4 +1,4 @@
-const passport = require("passport");
+const passport = require("../config/passport");
 
 class AuthController {
     // Google OAuth Login

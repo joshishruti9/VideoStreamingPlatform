@@ -2,14 +2,23 @@ const passport = require("passport");
 const PassportService = require("../services/passportService");
 const GoogleAuthStrategy = require("../strategies/GoogleStrategy");
 
-// Create a new instance of PassportService and pass the passport instance
-const passportService = new PassportService(passport);
+class Passport {
+    constructor() {
+        this.passport = passport;
+        this.passportService = new PassportService(passport);
+        this.initialize()
+    }
 
-// Add Google strategy and pass the passport instance
-const googleStrategy = new GoogleAuthStrategy(passport);
-passportService.useStrategy(googleStrategy);
+    initialize() {
+        this.passportService.useStrategy(new GoogleAuthStrategy(this.getPassport()));
+        this.passportService.initialize();
+    }
 
-// Initialize Passport
-passportService.initialize();
+    // Method to get the Passport instance
+    getPassport() {
+        return this.passport;
+    }
+}
 
-module.exports = passport; // Export the configured passport instance
+// Export an instance of the Passport class
+module.exports = new Passport().getPassport();
