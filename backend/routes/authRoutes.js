@@ -10,16 +10,16 @@ class AuthRoutes {
 
     initializeRoutes() {
         // Google Login Route
-        router.get("/google", authController.googleAuth);
+        this.router.get("/google", authController.googleAuth);
 
         // Google OAuth Callback Route
-        router.get("/google/callback", authController.googleAuthCallback, authController.handleGoogleCallback);
+        this.router.get("/google/callback", authController.googleAuthCallback, authController.handleGoogleCallback);
 
         // Logout Route
-        router.get("/logout", authController.logoutUser);
+        this.router.get("/logout", authController.logoutUser);
 
         // Get User Session
-        router.get("/user", authController.getUserSession);
+        this.router.get("/user", authController.getUserSession);
     }
 
     getRouter() {
