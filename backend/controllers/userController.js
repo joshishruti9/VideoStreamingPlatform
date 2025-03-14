@@ -1,27 +1,30 @@
-const userModel = require("../models/userModel");
+const userModel = require("../models/UserModel");
 
-// Get User Session
-const getUserSession = (req, res) => {
-    if (req.isAuthenticated()) {
-        res.json({ user: req.user });
-    } else {
-        res.status(401).json({ message: "Unauthorized" });
-    }
-};
-
-// Fetch User by ID
-const getUserById = (req, res) => {
-    const userId = req.params.id;
-    userModel.findUserByGoogleId(userId, (err, user) => {
-        if (err) {
-            console.error("Error fetching user:", err);
-            return res.status(500).json({ message: "Database error" });
+class UserController {
+    // Get User Session
+    getUserSession = (req, res) => {
+        if (req.isAuthenticated()) {
+            res.json({ user: req.user });
+        } else {
+            res.status(401).json({ message: "Unauthorized" });
         }
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-        res.json({ user });
-    });
-};
+    };
 
-module.exports = { getUserSession, getUserById };
+    // Fetch User by ID
+    getUserById = (req, res) => {
+        const userId = req.params.id;
+        userModel.findUserByGoogleId(userId, (err, user) => {
+            if (err) {
+                console.error("Error fetching user:", err);
+                return res.status(500).json({ message: "Database error" });
+            }
+            if (!user) {
+                return res.status(404).json({ message: "User not found" });
+            }
+            res.json({ user });
+        });
+    };
+
+}
+
+module.exports = new UserController() ;
