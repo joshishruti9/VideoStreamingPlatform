@@ -1,30 +1,20 @@
 const userModel = require("../models/userModel");
 
 class UserController {
-    // Get User Session
-    getUserSession = (req, res) => {
-        if (req.isAuthenticated()) {
-            res.json({ user: req.user });
-        } else {
-            res.status(401).json({ message: "Unauthorized" });
-        }
-    };
+    // Find user by provider ID
+    findUserByProviderId(provider, providerId, callback) {
+        userModel.findUserByProviderId(provider, providerId, callback);
+    }
 
-    // Fetch User by ID
-    getUserById = (req, res) => {
-        const userId = req.params.id;
-        userModel.findUserByGoogleId(userId, (err, user) => {
-            if (err) {
-                console.error("Error fetching user:", err);
-                return res.status(500).json({ message: "Database error" });
-            }
-            if (!user) {
-                return res.status(404).json({ message: "User not found" });
-            }
-            res.json({ user });
-        });
-    };
+    // Find user by ID (for deserialization)
+    findUserByID(id, callback) {
+        userModel.findUserById(id, callback);
+    }
 
+    // Create a new user
+    createUser(provider, profile, callback) {
+        userModel.createUser(provider, profile, callback);
+    }
 }
 
-module.exports = new UserController() ;
+module.exports = new UserController();

@@ -1,6 +1,7 @@
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const AuthStrategy = require("./AuthStrategy");
 const userModel = require("../models/userModel");
+const userController = require("../controllers/userController");
 
 class GoogleAuthStrategy extends AuthStrategy {
     constructor(passport) {
@@ -18,13 +19,13 @@ class GoogleAuthStrategy extends AuthStrategy {
                 },
                 (accessToken, refreshToken, profile, done) => {
                     // Use the generic method to find the user
-                    userModel.findUserByProviderId("google", profile.id, (err, existingUser) => {
+                    userController.findUserByProviderId("google", profile.id, (err, existingUser) => {
                         if (err) return done(err);
                         if (existingUser) {
                             return done(null, existingUser); // User exists, return the user
                         } else {
                             // User doesn't exist, create a new user
-                            userModel.createUser("google", profile, (err, newUser) => {
+                            userController.createUser("google", profile, (err, newUser) => {
                                 return done(err, newUser);
                             });
                         }
