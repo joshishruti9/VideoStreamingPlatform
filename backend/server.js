@@ -7,6 +7,7 @@ const session = require("express-session");
 const passport = require("./config/passport");
 const videoRoutes = require("./routes/videoRoutes");
 const authRoutes = require("./routes/authRoutes");
+const setupSwagger = require('./config/swagger');
 
 
 
@@ -22,6 +23,9 @@ app.use(passport.session());
 
 app.use("/auth", authRoutes);
 app.use("/videos", videoRoutes);
+
+// Setup Swagger
+setupSwagger(app);
 
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
