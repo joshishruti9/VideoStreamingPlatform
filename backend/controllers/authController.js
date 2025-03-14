@@ -23,4 +23,13 @@ const logoutUser = (req, res) => {
     });
 };
 
-module.exports = { googleAuth, googleAuthCallback, handleGoogleCallback, logoutUser };
+// Get User Session
+const getUserSession = (req, res) => {
+    if (req.isAuthenticated()) {
+        res.json({ user: req.user });
+    } else {
+        res.status(401).json({ message: "Unauthorized" });
+    }
+};
+
+module.exports = { googleAuth, googleAuthCallback, handleGoogleCallback, logoutUser, getUserSession };
