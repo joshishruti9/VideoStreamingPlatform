@@ -29,6 +29,7 @@ const UploadPage = () => {
         try {
             const response = await axios.post("http://localhost:5000/videos/upload", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
+                withCredentials: true, // Include cookies for session-based authentication
             });
 
             alert("Upload successful! Video ID: " + response.data.videoId);
