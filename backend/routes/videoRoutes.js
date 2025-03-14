@@ -1,28 +1,32 @@
-// routes/videoRoutes.js
 const express = require('express');
 const videoController = require('../controllers/videoController');
 const isAuthenticated = require("../middleware/authMiddleware");
-const router = express.Router();
 
-// Serve the video upload form (View)
-router.get('/upload', (req, res) => {
-    res.sendFile(path.join(__dirname, '../pages/uploadVideo.html'));
-});
+class VideoRoutes {
+    constructor() {
+        this.router = express.Router();
+        this.initializeRoutes();
+    }
 
+    initializeRoutes() {
+        // Video upload API endpoint (protected by authentication middleware)
+        this.router.post("/upload", isAuthenticated, videoController.uploadVideo);
 
-// Video upload API endpoint (Controller). Route is protected by isAuthenticated middleware
-router.post("/upload", isAuthenticated, videoController.uploadVideo);
+        // Get all video details API endpoint
+        this.router.get("/", videoController.getAllVideoDetails);
 
-// Get all video details API endpoint
-router.get("/", videoController.getAllVideoDetails);
+        // Get specific video details API endpoint
+        this.router.get("/:id", videoController.getVideoDetailsById);
 
-// Get specific video tail API endpoint
-router.get("/:id", videoController.getVideoDetailsById);
+        // Video streaming API endpoint
+        this.router.get("/stream/:id", videoController.streamVideo);
 
-// Video streaming API endpoint
-router.get("/stream/:id", videoController.streamVideo);
+    }
 
-// Video download  API endpoint
-router.get('/download/:id', videoController.downloadVideo)
+    getRouter() {
+        return this.router;
+    }
+}
 
-module.exports = router;
+// Export an instance of the class
+module.exports = new VideoRoutes().getRouter();
