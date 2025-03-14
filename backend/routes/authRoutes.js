@@ -2,16 +2,32 @@ const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/authController");
 
-// Google Login Route
-router.get("/google", authController.googleAuth);
+class AuthRoutes {
+    constructor() {
+        this.router = express.Router();
+        this.initializeRoutes();
+    }
 
-// Google OAuth Callback Route
-router.get("/google/callback", authController.googleAuthCallback, authController.handleGoogleCallback);
+    initializeRoutes() {
+        // Google Login Route
+        router.get("/google", authController.googleAuth);
 
-// Logout Route
-router.get("/logout", authController.logoutUser);
+        // Google OAuth Callback Route
+        router.get("/google/callback", authController.googleAuthCallback, authController.handleGoogleCallback);
 
-// Get User Session
-router.get("/user", authController.getUserSession);
+        // Logout Route
+        router.get("/logout", authController.logoutUser);
 
-module.exports = router;
+        // Get User Session
+        router.get("/user", authController.getUserSession);
+    }
+
+    getRouter() {
+        return this.router;
+    }
+
+}
+
+// Export an instance of the class
+module.exports = new AuthRoutes().getRouter();
+
