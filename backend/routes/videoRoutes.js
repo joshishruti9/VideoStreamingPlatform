@@ -1,6 +1,7 @@
 // routes/videoRoutes.js
 const express = require('express');
 const videoController = require('../controllers/videoController');
+const isAuthenticated = require("../middleware/authMiddleware");
 const router = express.Router();
 
 // Serve the video upload form (View)
@@ -9,8 +10,8 @@ router.get('/upload', (req, res) => {
 });
 
 
-// Video upload API endpoint (Controller)
-router.post("/upload", videoController.uploadVideo);
+// Video upload API endpoint (Controller). Route is protected by isAuthenticated middleware
+router.post("/upload", isAuthenticated, videoController.uploadVideo);
 
 // Get all video details API endpoint
 router.get("/", videoController.getAllVideoDetails);
