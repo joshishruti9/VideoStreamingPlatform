@@ -1,4 +1,3 @@
-// controllers/videoController.js
 const videoModel = require('../models/videoModel');
 const multer = require('multer');
 
