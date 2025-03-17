@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import VideoPlayer from "../components/videoPlayer";
+import Navbar from "../components/navbar";
 
 const WatchPage = () => {
     const { id } = useParams();
@@ -26,14 +27,17 @@ const WatchPage = () => {
     if (error) return <p style={{ color: "red" }}>{error}</p>;
 
     return (
-        <div style={{ textAlign: "center", marginTop: "20px" }}>
-            <h2>{video.title}</h2>
-            <p>{video.description}</p>
-            <p>Uploaded by: {video.uploader}</p>
+        <div>
+            <Navbar />
+            <div style={{ textAlign: "center", marginTop: "20px" }}>
+                <h2>{video.title}</h2>
+                <p>{video.description}</p>
+                <p>Uploaded by: {video.uploader}</p>
 
-            <p>Uploaded on: {new Date(video.created_at).toLocaleDateString()}</p>
+                <p>Uploaded on: {new Date(video.created_at).toLocaleDateString()}</p>
 
-            <VideoPlayer videoId={id} /> {/* Using the reusable VideoPlayer component */}
+                <VideoPlayer videoId={id} /> {/* Using the reusable VideoPlayer component */}
+            </div>
         </div>
     );
 };
