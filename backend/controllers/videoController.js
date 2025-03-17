@@ -36,7 +36,7 @@ class VideoController {
                     return res.status(500).json({ message: "Error storing video in database", error: err });
                 }
 
-                res.status(200).json({ message: "Video uploaded successfully" });
+                res.status(200).json({ message: "Video uploaded successfully", videoId: videoId});
             });
         });
     };
@@ -123,16 +123,44 @@ class VideoController {
                 return res.status(404).json({ error: "Video not found" });
             }
 
-            // Set headers for video streaming
-            res.writeHead(200, {
-                "Content-Type": "video/mp4",
-                "Content-Length": videoData.length
-            });
+            const range = req.headers.range;
+            const videoSize = videoData.length; // Size of the video BLOB
 
-            res.end(videoData);
+            if (range) {
+                // Handle range requests
+                const parts = range.replace(/bytes=/, "").split("-");
+                const start = parseInt(parts[0], 10);
+                const end = parts[1] ? parseInt(parts[1], 10) : videoSize - 1;
+
+                if (start >= videoSize) {
+                    res.status(416).json({ error: "Requested range not satisfiable" });
+                    return;
+                }
+
+                const chunkSize = (end - start) + 1;
+                const chunk = videoData.slice(start, end + 1); // Extract the chunk from the BLOB
+
+                const head = {
+                    'Content-Range': `bytes ${start}-${end}/${videoSize}`,
+                    'Accept-Ranges': 'bytes',
+                    'Content-Length': chunkSize,
+                    'Content-Type': 'video/mp4',
+                };
+
+                res.writeHead(206, head); // 206 = Partial Content
+                res.end(chunk); // Send the chunk
+            } else {
+                // Handle full video request
+                const head = {
+                    'Content-Length': videoSize,
+                    'Content-Type': 'video/mp4',
+                };
+                res.writeHead(200, head);
+                res.end(videoData); // Send the entire video BLOB
+            }
         });
-    };
-}
+    }
+};
 
 const videoController = new VideoController();
 module.exports = videoController;
