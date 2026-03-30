@@ -1,4 +1,4 @@
-# YouTube Redesign (CPSC 5200)
+# VideoStreamingPlatform
 
 ## Overview
 This project is a full-stack YouTube-like platform built using Node.js, Express, MySQL, and React. It provides a backend with RESTful APIs for video uploading, streaming, authentication via Google OAuth, and user management, along with a React frontend for user interaction.
